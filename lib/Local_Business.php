@@ -123,59 +123,85 @@ class Local_Business {
 		$opening_hours   = $this->get_opening_hours();
 		$options         = $this->options;
 
-		$local_business = Schema::localBusiness()
-			->name( ! empty( $options['name'] ) ? $options['name'] : get_option( 'blogname' ) )
-			->url( home_url() )
-			->description( get_bloginfo( 'description' ) )
-			->address( Schema::postalAddress()
-				->addressLocality( $options['city'] )
-				->postalCode( $options['zip'] )
-				->if( ! empty( $options['street'] ), function( PostalAddress $schema ) use ( $options ) {
-					$schema->streetAddress( $options['street'] );
-				} )
-				->if( ! empty( $options['country_code'] ), function( PostalAddress $schema ) use ( $options ) {
-					$schema->addressCountry( ! empty( $options['country_code'] ) ? $options['country_code'] : '' );
-				} )
-				->if( ! empty( $options['post_office_box_number'] ), function( PostalAddress $schema ) use ( $options ) {
-					$schema->postOfficeBoxNumber( $options['post_office_box_number'] );
-				} )
-			)
-			->if( ! empty( $options['email'] ), function( LocalBusiness $schema ) use ( $options ) {
-				$schema->email( $options['email'] );
-			} )
-			->if( ! empty( $options['phone'] ), function( LocalBusiness $schema ) use ( $options ) {
-				$schema->telephone( $options['phone'] );
-			} )
-			->if( ! empty( $options['logo'] ), function( LocalBusiness $schema ) use ( $options ) {
-				$logo = $options['logo'];
+		$local_business = Schema::localBusiness();
 
-				// Convert logo into URL if we have a potential ID
-				if ( is_numeric( $logo ) ) {
-					$logo = wp_get_attachment_image_src( $logo, 'full' )[0];
-				}
+		$local_business->name( ! empty( $options['name'] )
+			? $options['name']
+			: get_option( 'blogname' )
+		);
+		$local_business->url( home_url() );
+		$local_business->description( get_bloginfo( 'description' ) );
 
-				$schema
-					->logo( $logo )
-					->image( $logo );
-			} )
-			->if( ! empty( $options['geo'] ) && ! empty( $options['geo']['geo'] ), function( LocalBusiness $schema ) use ( $options ) {
-				$props = $options['geo'];
+		$address = Schema::postalAddress();
 
-				$schema->setProperty( 'geo', Schema::geoCoordinates()
-					->address( $props['address'] )
-					->latitude( $props['lat'] )
-					->longitude( $props['lng'] )
-					->if( ! empty( $options['zip'] ), function( GeoCoordinates $schema ) use ( $options ) {
-						$schema->postalCode( $options['zip'] );
-					} )
-				);
-			} )
-			->if( ! empty( $social_profiles ), function( LocalBusiness $schema ) use ( $social_profiles ) {
-				$schema->sameAs( $social_profiles );
-			} )
-			->if( ! empty( $opening_hours ), function( LocalBusiness $schema ) use ( $opening_hours ) {
-				$schema->setProperty( 'openingHoursSpecification', $opening_hours );
-			} );
+		if ( ! empty( $options['city'] ) ) {
+			$address->addressLocality( $options['city'] );
+		}
+
+		if ( ! empty( $options['zip'] ) ) {
+			$address->postalCode( $options['zip'] );
+		}
+
+		if ( ! empty( $options['street'] ) ) {
+			$address->streetAddress( $options['street'] );
+		}
+
+		if ( ! empty( $options['country_code'] ) ) {
+			$address->addressCountry( ! empty( $options['country_code'] )
+				? $options['country_code']
+				: ''
+			);
+		}
+
+		if ( ! empty( $options['post_office_box_number'] ) ) {
+			$address->postOfficeBoxNumber( $options['post_office_box_number'] );
+		}
+
+		$local_business->address( $address );
+
+		if ( ! empty( $options['email'] ) ) {
+			$local_business->email( $options['email'] );
+		}
+
+		if ( ! empty( $options['phone'] ) ) {
+			$local_business->telephone( $options['phone'] );
+		}
+
+		if ( ! empty( $options['logo'] ) ) {
+			$logo = $options['logo'];
+
+			// Convert logo into URL if we have a potential ID.
+			if ( is_numeric( $logo ) ) {
+				$logo = wp_get_attachment_image_src( $logo, 'full' )[0];
+			}
+
+			$local_business->logo( $logo )
+				->image( $logo );
+		}
+
+		if ( ! empty( $options['geo'] ) ) {
+			$props = $options['geo'];
+
+			$geo_coordinates = Schema::geoCoordinates();
+
+			$geo_coordinates->address( $props['address'] );
+			$geo_coordinates->latitude( $props['lat'] );
+			$geo_coordinates->longitude( $props['lng'] );
+
+			if ( ! empty( $options['zip'] ) ) {
+				$geo_coordinates->postalCode( $options['zip'] );
+			}
+
+			$local_business->setProperty( 'geo', $geo_coordinates );
+		}
+
+		if ( ! empty( $social_profiles ) ) {
+			$local_business->sameAs( $social_profiles );
+		}
+
+		if ( ! empty( $opening_hours ) ) {
+			$local_business->setProperty( 'openingHoursSpecification', $opening_hours );
+		}
 
 		return $local_business->toScript();
 	}
