@@ -14,6 +14,8 @@ use Spatie\SchemaOrg\Schema;
  *
  * To test your Structured Data, you can use the following Testing Tool:
  * https://search.google.com/structured-data/testing-tool.
+ *
+ * @since 2.0.0
  */
 class Logo {
 	/**

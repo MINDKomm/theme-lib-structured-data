@@ -5,7 +5,7 @@ namespace Theme\Structured_Data;
 use Spatie\SchemaOrg\Schema;
 
 /**
- * Class Logo
+ * Class Social_Profile
  *
  * @see https://developers.google.com/search/docs/data-types/social-profile
  *
@@ -14,6 +14,8 @@ use Spatie\SchemaOrg\Schema;
  *
  * To test your Structured Data, you can use the following Testing Tool:
  * https://search.google.com/structured-data/testing-tool.
+ *
+ * @since 2.0.0
  */
 class Social_Profile {
 	/**
