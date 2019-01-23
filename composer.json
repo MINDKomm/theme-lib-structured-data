@@ -4,8 +4,8 @@
     "description": "Structured Data helper classes for WordPress themes",
     "license": "MIT",
     "require": {
-      "php": ">=7.1.0",
-      "spatie/schema-org": "^1.3.0"
+      "php": ">=7.0.0",
+      "spatie/schema-org": "^2.0.0"
     },
     "autoload": {
       "psr-4": {
