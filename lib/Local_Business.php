@@ -38,7 +38,6 @@ class Local_Business {
 	public static $social_profiles = [
 		'facebook',
 		'twitter',
-		'googleplus',
 		'instagram',
 		'youtube',
 		'linkedin',
