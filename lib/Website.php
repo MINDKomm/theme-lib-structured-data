@@ -7,8 +7,6 @@ use Spatie\SchemaOrg\Schema;
 /**
  * Class Website
  *
- * @package Theme\Structured_Data
- *
  * @see https://developers.google.com/search/docs/data-types/sitelinks-searchbox
  *
  * Add Structured Data in the JSON-LD format.
@@ -46,4 +44,3 @@ class Website {
 		return $website->toScript();
 	}
 }
-

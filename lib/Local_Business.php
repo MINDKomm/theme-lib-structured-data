@@ -7,8 +7,6 @@ use Spatie\SchemaOrg\Schema;
 /**
  * Class Local_Business
  *
- * @package Theme\Structured_Data
- *
  * @see https://developers.google.com/search/docs/data-types/local-businesses
  *
  * Add Structured Data in the JSON-LD format.
@@ -26,50 +24,12 @@ class Local_Business {
 	public $options;
 
 	/**
-	 * Possible social profile fields.
+	 * Local_Business constructor.
 	 *
-	 * @see https://developers.google.com/search/docs/data-types/social-profile-links
-	 *
-	 * @var array
+	 * @param array $options An array of options.
 	 */
-	public static $social_profiles = [
-		'facebook',
-		'twitter',
-		'instagram',
-		'youtube',
-		'linkedin',
-		'pinterest',
-		'soundcloud',
-		'tumblr',
-	];
-
 	public function __construct( $options ) {
 		$this->options = $options;
-	}
-
-	/**
-	 * Get array of social profile links.
-	 *
-	 * @return array
-	 */
-	private function get_social_profiles() {
-		$profiles = [];
-
-		if ( ! empty( $this->options['social_profiles'] ) ) {
-			foreach ( self::$social_profiles as $name ) {
-				if ( ! empty( $this->options['social_profiles'][ $name ] ) ) {
-					$profiles[] = $this->options['social_profiles'][ $name ];
-				}
-			}
-		} else {
-			foreach ( self::$social_profiles as $name ) {
-				if ( ! empty( $this->options[ 'social_profile_' . $name ] ) ) {
-					$profiles[] = $this->options[ 'social_profile_' . $name ];
-				}
-			}
-		}
-
-		return $profiles;
 	}
 
 	/**
@@ -123,9 +83,8 @@ class Local_Business {
 	 * @return string The JSON-LD output.
 	 */
 	public function generate_jsonld() {
-		$social_profiles = $this->get_social_profiles();
-		$opening_hours   = $this->get_opening_hours();
-		$options         = $this->options;
+		$opening_hours = $this->get_opening_hours();
+		$options       = $this->options;
 
 		$local_business = Schema::localBusiness();
 
@@ -197,10 +156,6 @@ class Local_Business {
 			}
 
 			$local_business->setProperty( 'geo', $geo_coordinates );
-		}
-
-		if ( ! empty( $social_profiles ) ) {
-			$local_business->sameAs( $social_profiles );
 		}
 
 		if ( ! empty( $opening_hours ) ) {

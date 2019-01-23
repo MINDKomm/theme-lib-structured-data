@@ -17,17 +17,27 @@ composer require mindkomm/theme-lib-structured-data
 
 ## Usage
 
-```php
-// Local Business
-$local_business = new Theme\Structured_Data\Local_Business( $options );
-$local_business->generate_jsonld();
-
-// Website
-$website = new Theme\Structured_Data\Website();
-$website->generate_jsonld();
-```
-
 Put the generated output into the `<head>` of your HTML.
+
+```php
+add_action( 'wp_head', function() {
+    // Local Business
+    $local_business = new Theme\Structured_Data\Local_Business( $options );
+    echo $local_business->generate_jsonld();
+
+    // Website
+    $website = new Theme\Structured_Data\Website();
+    echo $website->generate_jsonld();
+
+    // Logo
+    $logo = new Theme\Structured_Data\Logo( $logo_url );
+    echo $logo->generate_jsonld();
+
+    // Social profiles
+    $social_profiles = new Theme\Structured_Data\Social_Profile( $social_profiles );
+    echo $social_profiles->generate_jsonld();
+} );
+```
 
 ### Website
 
@@ -35,7 +45,7 @@ The class checks if it can find a `search.php` file in your theme directory and 
 
 ```php
 // Use SearchAction, ignore check for search.php file.
-$website->generate_jsonld( true );
+echo $website->generate_jsonld( true );
 ```
 
 ### Local Business
@@ -43,7 +53,6 @@ $website->generate_jsonld( true );
 A Local Business entry can take a lot of data. The following types of data are supported:
 
 - **Contact Data** – Address, phone number, email address, etc.
-- **Social Profiles** – Links to social profiles such as Facebook, Twitter, Instagram.
 - **Geocodes** – The latitude and longitude of where the business is located on the map.
 - **Opening hours** – The opening hours of a business.
 
@@ -63,11 +72,12 @@ $options = [
     'country_code'              => 'CH',
     'logo'                      => 'https://www.mind.ch/our-logo.png',
     'social_profiles' => [
-    	 'facebook'   => '',
+         'facebook'   => '',
          'twitter'    => 'https://twitter.com/mindkomm',
          'instagram'  => '',
          'youtube'    => '',
          'linkedin'   => '',
+         'myspace'    => '',
          'pinterest'  => '',
          'soundcloud' => '',
          'tumblr'     => '',
@@ -104,12 +114,44 @@ $options = [
     ],
 ];
 
-// Local Business
 $local_business = new Theme\Structured_Data\Local_Business( $options );
-$local_business->generate_jsonld();
+
+echo $local_business->generate_jsonld();
 ``` 
 
-- It’s up to you how you want to build this data. We normally use an [ACF Options Page](https://www.advancedcustomfields.com/resources/options-page/) as an interface to edit these values.
+### Logo
+
+Adds logo markup according to the Structured Data Guide for [Logo](https://developers.google.com/search/docs/data-types/logo).
+
+```php
+$logo = new Theme\Structured_Data\Logo( 'https://www.mind.ch/our-logo.png' );
+
+echo $logo->generate_jsonld();
+```
+
+### Social Profiles
+
+Links to social profiles such as Facebook, Twitter, Instagram according to the Structured Data Guide for [Social Profile](https://developers.google.com/search/docs/data-types/social-profile).
+
+```php
+$social_profiles = new Theme\Structured_Data\Social_Profile( [
+    'facebook'   => '',
+    'twitter'    => 'https://twitter.com/mindkomm',
+    'instagram'  => '',
+    'youtube'    => '',
+    'linkedin'   => '',
+    'myspace'    => '',
+    'pinterest'  => '',
+    'soundcloud' => '',
+    'tumblr'     => '',
+] );
+
+echo $social_profiles->generate_jsonld();
+```
+
+### Usage remarks
+
+- It’s up to you how you want to build this data. You can set up a customizer page or you could use an [ACF Options Page](https://www.advancedcustomfields.com/resources/options-page/) as an interface to edit these values.
 - If you don’t provide a value for something, it will be ignored in the output.
 - Always check your output with the [Structured Data Testing Tool](https://search.google.com/structured-data/testing-tool/u/0/).
 
