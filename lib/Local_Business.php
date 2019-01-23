@@ -58,9 +58,17 @@ class Local_Business {
 	private function get_social_profiles() {
 		$profiles = [];
 
-		foreach ( self::$social_profiles as $name ) {
-			if ( ! empty( $this->options[ 'social_profile_' . $name ] ) ) {
-				$profiles[] = $this->options[ 'social_profile_' . $name ];
+		if ( ! empty( $this->options['social_profiles'] ) ) {
+			foreach ( self::$social_profiles as $name ) {
+				if ( ! empty( $this->options['social_profiles'][ $name ] ) ) {
+					$profiles[] = $this->options['social_profiles'][ $name ];
+				}
+			}
+		} else {
+			foreach ( self::$social_profiles as $name ) {
+				if ( ! empty( $this->options[ 'social_profile_' . $name ] ) ) {
+					$profiles[] = $this->options[ 'social_profile_' . $name ];
+				}
 			}
 		}
 
