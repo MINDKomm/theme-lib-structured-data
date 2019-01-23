@@ -2,9 +2,6 @@
 
 namespace Theme\Structured_Data;
 
-use Spatie\SchemaOrg\GeoCoordinates;
-use Spatie\SchemaOrg\LocalBusiness;
-use Spatie\SchemaOrg\PostalAddress;
 use Spatie\SchemaOrg\Schema;
 
 /**
